@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic; // Added for using Dictionary
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -11,14 +12,15 @@ namespace WheelGame
         private int selectedPrizePrediction = 0;  // Player's selected prize prediction
         private bool isSpinning = false;
 
-        // Corrected prize amounts corresponding to the 20 segments
-        private readonly int[] prizeAmounts = new int[]
+        // Dictionary mapping segment indices to prize amounts
+        private readonly Dictionary<int, int> segmentPrizes = new Dictionary<int, int>
         {
-        10000, 5, 5000, 5, 50, 5, 1000, 5,  // First 8 segments
-        50, 5, 5000, 5, 50, 5, 1000, 5,     // Next 8 segments
-        50, 5, 5000, 5                       // Last 4 segments before returning to red
+            { 0, 10000 }, { 1, 5 }, { 2, 5000 }, { 3, 5 },
+            { 4, 50 }, { 5, 5 }, { 6, 1000 }, { 7, 5 },
+            { 8, 50 }, { 9, 5 }, { 10, 5000 }, { 11, 5 },
+            { 12, 50 }, { 13, 5 }, { 14, 1000 }, { 15, 5 },
+            { 16, 50 }, { 17, 5 }, { 18, 5000 }, { 19, 5 }
         };
-
 
         public MainWindow()
         {
@@ -69,10 +71,7 @@ namespace WheelGame
             await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
 
             int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
-            int prizeAmount = prizeAmounts[prizeIndex];
-
-            // Debugging: Show which segment and prize was selected
-            MessageBox.Show($"Segment Index: {prizeIndex}, Prize: R{prizeAmount}");
+            int prizeAmount = segmentPrizes[prizeIndex]; // Use the dictionary to get the prize amount
 
             int winnings = prizeAmount;
             if (prizeAmount == selectedPrizePrediction)
