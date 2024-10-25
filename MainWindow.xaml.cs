@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace WheelGame
 {
@@ -56,7 +58,7 @@ namespace WheelGame
 
     public partial class MainWindow : Window
     {
-        private int selectedPrizePrediction = 0;  // Player's selected prize prediction
+        private int selectedPrizePrediction = 0;
         private bool isSpinning = false;
         private GameController gameController;
 
@@ -66,24 +68,22 @@ namespace WheelGame
             gameController = new GameController();
         }
 
-        // Handle the player's prize prediction selection
         private void PrizePredictionComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (PrizePredictionComboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem &&
                 int.TryParse(selectedItem.Content?.ToString(), out int prediction))
             {
                 selectedPrizePrediction = prediction;
-                SpinButton.IsEnabled = true;  // Enable the Spin button
-                gameController.SetPrediction(prediction); // Set the prediction in the controller
+                SpinButton.IsEnabled = true;
+                gameController.SetPrediction(prediction);
             }
             else
             {
                 selectedPrizePrediction = 0;
-                SpinButton.IsEnabled = false;  // Disable the Spin button
+                SpinButton.IsEnabled = false;
             }
         }
 
-        // Spin button click handler
         private async void SpinButton_Click(object sender, RoutedEventArgs e)
         {
             if (isSpinning) return;
@@ -104,20 +104,20 @@ namespace WheelGame
             tickPlayer.Open(new Uri(tickSoundPath, UriKind.Absolute));
 
             Random random = new Random();
-            double segmentSize = 18.0;  // 20 segments, each 18 degrees
+            double segmentSize = 18.0;
             int rawAngle = random.Next(0, 360);
             double stopAngle = Math.Round(rawAngle / segmentSize) * segmentSize;
 
-            await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
+            await SpinWheelWithTicks(stopAngle, tickPlayer);
 
-            // Use the GameController to get the prize
             (int prizeAmount, bool isWin) = gameController.SpinWheel(stopAngle);
 
             int winnings = prizeAmount;
             if (isWin)
             {
-                winnings *= 2;  // Double the prize for correct prediction
+                winnings *= 2;
                 PrizeDisplay.Text = $"Congratulations! You predicted correctly and won 2x R{prizeAmount} = R{winnings}!";
+                ShowConfetti();  // Trigger confetti on win
             }
             else
             {
@@ -161,6 +161,45 @@ namespace WheelGame
             CompositionTarget.Rendering += renderingHandler;
             await Task.Delay(spinAnimation.Duration.TimeSpan);
             CompositionTarget.Rendering -= renderingHandler;
+        }
+
+        // Method to Show Confetti
+        private void ShowConfetti()
+        {
+            Random random = new Random();
+            for (int i = 0; i < 50; i++)
+            {
+                Ellipse confetti = new Ellipse
+                {
+                    Width = random.Next(5, 10),
+                    Height = random.Next(5, 10),
+                    Fill = new SolidColorBrush(Color.FromRgb(
+                        (byte)random.Next(256),
+                        (byte)random.Next(256),
+                        (byte)random.Next(256)))
+                };
+
+                double startX = random.Next(0, (int)ConfettiCanvas.ActualWidth);
+                Canvas.SetLeft(confetti, startX);
+                Canvas.SetTop(confetti, -10);
+
+                ConfettiCanvas.Children.Add(confetti);
+
+                DoubleAnimation fallAnimation = new DoubleAnimation
+                {
+                    From = -10,
+                    To = ConfettiCanvas.ActualHeight + 10,
+                    Duration = new Duration(TimeSpan.FromSeconds(random.Next(2, 5))),
+                    EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
+                };
+
+                Storyboard.SetTarget(fallAnimation, confetti);
+                Storyboard.SetTargetProperty(fallAnimation, new PropertyPath("(Canvas.Top)"));
+
+                Storyboard storyboard = new Storyboard();
+                storyboard.Children.Add(fallAnimation);
+                storyboard.Begin();
+            }
         }
     }
 }
