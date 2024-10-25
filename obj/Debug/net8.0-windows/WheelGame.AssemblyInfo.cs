@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WheelGame")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+293d90401f39bc0750cbf2a3e5b05140919d4bc7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b52ca89eda5fb61100f56f19ee39bd24cabd1a69")]
 [assembly: System.Reflection.AssemblyProductAttribute("WheelGame")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WheelGame")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
