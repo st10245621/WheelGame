@@ -70,7 +70,6 @@ namespace WheelGame
             double fullRotations = 5;  // 5 full rotations
             double totalRotation = 360 * fullRotations + stopAngle;  // Total rotation angle
             double segmentSize = 18.0;  // 20 segments, each 18 degrees
-            double currentAngle = 0;
             int lastSegment = -1;  // Track the last ticked segment
 
             DoubleAnimation spinAnimation = new DoubleAnimation
@@ -81,32 +80,33 @@ namespace WheelGame
                 EasingFunction = new CircleEase { EasingMode = EasingMode.EaseOut }
             };
 
-            spinAnimation.CurrentTimeInvalidated += (s, e) =>
+            // Start the animation
+            WheelRotation.BeginAnimation(RotateTransform.AngleProperty, spinAnimation);
+
+            // Subscribe to the CompositionTarget.Rendering event
+            EventHandler renderingHandler = null;
+            renderingHandler = (s, e) =>
             {
-                var clock = (AnimationClock)s;
-                double? fromValue = spinAnimation.From;
-                double? toValue = spinAnimation.To;
-                double? progress = clock.CurrentProgress;
+                // Get the current angle from the RotateTransform
+                double currentAngle = (WheelRotation.Angle % 360 + 360) % 360;  // Normalize angle between 0-360
 
-                if (fromValue.HasValue && toValue.HasValue && progress.HasValue)
+                int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
+
+                if (currentSegment != lastSegment)  // Play tick if new segment is crossed
                 {
-                    // Calculate the current angle based on animation progress
-                    currentAngle = fromValue.Value + ((toValue.Value - fromValue.Value) * progress.Value);
-                    currentAngle = (currentAngle % 360 + 360) % 360;  // Normalize angle between 0-360
-
-                    int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
-
-                    if (currentSegment != lastSegment)  // Play tick if new segment is crossed
-                    {
-                        tickPlayer.Stop();
-                        tickPlayer.Play();
-                        lastSegment = currentSegment;
-                    }
+                    tickPlayer.Stop();
+                    tickPlayer.Play();
+                    lastSegment = currentSegment;
                 }
             };
 
-            WheelRotation.BeginAnimation(RotateTransform.AngleProperty, spinAnimation);
+            CompositionTarget.Rendering += renderingHandler;
+
+            // Wait for the animation to complete
             await Task.Delay(spinAnimation.Duration.TimeSpan);
+
+            // Unsubscribe from the event
+            CompositionTarget.Rendering -= renderingHandler;
         }
 
         // Determines the prize index based on the final stop angle.
