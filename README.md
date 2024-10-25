@@ -1,7 +1,3 @@
-Based on your current **project structure** and the provided code, here’s a tailored **README.md** file. This README follows **Silicon Valley best practices**, giving contributors clear instructions based on your current setup.
-
----
-
 # 🎡 Wheel Game
 
 A **WPF-based wheel spinning game** that offers an engaging experience with animations, confetti, and sound effects. Players predict the outcome of a spin, and if they guess correctly, they win double the prize! The confetti animation makes winning even more exciting.
