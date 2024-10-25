@@ -55,12 +55,16 @@ namespace WheelGame
             tickPlayer.Open(new Uri(tickSoundPath, UriKind.Absolute));
 
             Random random = new Random();
-            int segmentIndex = random.Next(0, 8);
-            int stopAngle = segmentIndex * 45 + 22;
+            int rawAngle = random.Next(0, 360);  // Get a random stop angle between 0-360
 
-            await SpinWheelWithTicks(stopAngle, tickPlayer);
+            // Adjust the angle to align with the nearest segment's center
+            int segmentSize = 30;  // 12 segments of 30 degrees each
+            int stopAngle = (int)(Math.Round(rawAngle / (double)segmentSize) * segmentSize);
 
-            string prize = DeterminePrize(segmentIndex);
+            await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
+
+            // Determine the prize based on the aligned stop angle.
+            string prize = DeterminePrizeFromAngle(stopAngle);
             PrizeDisplay.Text = $"You won {selectedPrizeAmount} with {prize}!";
 
             SpinButton.IsEnabled = true;
@@ -71,10 +75,10 @@ namespace WheelGame
         private async Task SpinWheelWithTicks(int stopAngle, MediaPlayer tickPlayer)
         {
             int totalRotation = 360 * 5 + stopAngle;  // 5 full rotations + precise stop
-            int segmentSize = 45;  // 8 segments, each 45 degrees
+            int segmentSize = 30;  // 12 segments, each 30 degrees
             double currentAngle = 0;
+            int lastSegment = -1;  // Track the last ticked segment
 
-            // Animation setup
             DoubleAnimation spinAnimation = new DoubleAnimation
             {
                 From = 0,
@@ -83,57 +87,47 @@ namespace WheelGame
                 EasingFunction = new CircleEase { EasingMode = EasingMode.EaseOut }
             };
 
-            // Track the last ticked segment to avoid repeated ticks
-            int lastSegment = -1;
-            bool finalTickPlayed = false;
-
-            // Subscribe to the wheel rotation updates
             spinAnimation.CurrentTimeInvalidated += (s, e) =>
             {
-                if (WheelRotation.Angle != currentAngle)  // If angle has changed
-                {
-                    currentAngle = WheelRotation.Angle % 360;  // Normalize between 0-360 degrees
-                    int currentSegment = (int)(currentAngle / segmentSize);  // Determine the current segment
+                currentAngle = (WheelRotation.Angle % 360 + 360) % 360;  // Normalize angle
+                int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
 
-                    if (currentSegment != lastSegment)  // If a new segment is crossed
-                    {
-                        tickPlayer.Stop();  // Stop any previously playing sound
-                        tickPlayer.Play();  // Play the tick sound
-                        lastSegment = currentSegment;
-                    }
-                }
-
-                // Play one last tick right before the animation completes
-                if (!finalTickPlayed && spinAnimation.Duration.HasTimeSpan &&
-                    spinAnimation.Duration.TimeSpan - TimeSpan.FromMilliseconds(100) <= (s as Clock)?.CurrentTime)
+                if (currentSegment != lastSegment)  // Play tick if new segment is crossed
                 {
-                    tickPlayer.Stop();  // Stop any previously playing sound
-                    tickPlayer.Play();  // Play the final tick sound
-                    finalTickPlayed = true;  // Ensure final tick is played only once
+                    tickPlayer.Stop();
+                    tickPlayer.Play();
+                    lastSegment = currentSegment;
                 }
             };
 
-            // Start the wheel animation
             WheelRotation.BeginAnimation(RotateTransform.AngleProperty, spinAnimation);
-
-            // Wait for the animation to complete
             await Task.Delay(spinAnimation.Duration.TimeSpan);
         }
 
-
-        // Determines the prize based on the final segment
-        private string DeterminePrize(int segmentIndex)
+        // Determines the prize based on the final stop angle.
+        private string DeterminePrizeFromAngle(double finalAngle)
         {
+            // Normalize the angle to a value between 0 and 360 degrees.
+            finalAngle = (finalAngle % 360 + 360) % 360;
+
+            // Each segment covers 30 degrees. Determine the segment index.
+            int segmentIndex = (int)(finalAngle / 30);
+
+            // Map the segment index to the correct prize color.
             return segmentIndex switch
             {
-                0 => "Green",
-                1 => "Blue",
-                2 => "Purple",
-                3 => "Yellow",
-                4 => "Red",
-                5 => "Orange",
-                6 => "Light Green",
-                7 => "Light Blue",
+                0 => "Red",
+                1 => "Purple",
+                2 => "Green",
+                3 => "Blue",
+                4 => "Yellow",
+                5 => "Green",
+                6 => "Purple",
+                7 => "Blue",
+                8 => "Yellow",
+                9 => "Red",
+                10 => "Purple",
+                11 => "Green",
                 _ => "Unknown"
             };
         }

@@ -3,23 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Wheel Game" Height="600" Width="500">
     <Grid>
-        <Canvas Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Canvas Name="WheelCanvas" Width="500" Height="500" 
+                HorizontalAlignment="Center" VerticalAlignment="Center">
             <!-- Wheel Backing -->
-            <Image Source="Assets/Backing.png" Width="500" Height="500" RenderTransformOrigin="0.5,0.5">
+            <Image Source="Assets/Backing.png" Width="500" Height="500" 
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <RotateTransform x:Name="WheelRotation" Angle="0"/>
                 </Image.RenderTransform>
             </Image>
 
             <!-- Rim Image -->
-            <Image Source="Assets/Rim.png" Width="500" Height="500" Canvas.Left="0" Canvas.Top="0"/>
+            <Image Source="Assets/Rim.png" Width="500" Height="500" 
+                   Canvas.Left="0" Canvas.Top="0"/>
 
             <!-- Centerpiece -->
-            <Image Source="Assets/Centre.png" Width="480" Height="476" Canvas.Left="10" Canvas.Top="12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <Image Source="Assets/Centre.png" Width="480" Height="476" 
+                   Canvas.Left="10" Canvas.Top="12"/>
 
             <!-- Pin Image -->
             <Image Source="Assets/Pin.png" Width="500" Height="511" 
-                   RenderTransformOrigin="0.5,0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                   RenderTransformOrigin="0.5,0" Canvas.Top="-3">
                 <Image.RenderTransform>
                     <RotateTransform Angle="0"/>
                 </Image.RenderTransform>
@@ -30,11 +34,27 @@
         <ComboBox Name="PrizeAmountComboBox" Width="150" Height="30" 
                   VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0"
                   SelectionChanged="PrizeAmountComboBox_SelectionChanged">
+            <!-- Updated Prize Amounts -->
+            <ComboBoxItem Content="5" />
+            <ComboBoxItem Content="10" />
+            <ComboBoxItem Content="20" />
+            <ComboBoxItem Content="50" />
             <ComboBoxItem Content="100" />
             <ComboBoxItem Content="200" />
-            <ComboBoxItem Content="300" />
-            <ComboBoxItem Content="400" />
             <ComboBoxItem Content="500" />
+            <ComboBoxItem Content="1000" />
+            <ComboBoxItem Content="5000" />
+            <ComboBoxItem Content="10000" />
+            <ComboBoxItem Content="20000" />
+            <ComboBoxItem Content="50000" />
+            <ComboBoxItem Content="75000" />
+            <ComboBoxItem Content="100000" />
+            <ComboBoxItem Content="125000" />
+            <ComboBoxItem Content="150000" />
+            <ComboBoxItem Content="175000" />
+            <ComboBoxItem Content="200000" />
+            <ComboBoxItem Content="225000" />
+            <ComboBoxItem Content="250000" />
         </ComboBox>
 
         <!-- Spin Button -->
@@ -43,7 +63,7 @@
                 Click="SpinButton_Click"/>
 
         <!-- Prize Display -->
-        <TextBlock Name="PrizeDisplay" HorizontalAlignment="Center" VerticalAlignment="Top"
-                   FontSize="24" Margin="0,50,0,0"/>
+        <TextBlock Name="PrizeDisplay" HorizontalAlignment="Center" 
+                   VerticalAlignment="Top" FontSize="24" Margin="0,50,0,0"/>
     </Grid>
 </Window>
