@@ -4,11 +4,13 @@
         Title="Wheel Game" Height="600" Width="500">
     <Grid>
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#8A2BE2" Offset="0.0" />
-                <!-- Neon Purple -->
-                <GradientStop Color="#00BFFF" Offset="1.0" />
-                <!-- Neon Blue -->
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#9400D3" Offset="0.0" />
+                <!-- Neon Dark Violet (Darker Purple) -->
+                <GradientStop Color="#8A2BE2" Offset="0.5" />
+                <!-- Neon Electric Purple -->
+                <GradientStop Color="#00FFFF" Offset="1.0" />
+                <!-- Neon Cyan (Bright Neon Blue) -->
             </LinearGradientBrush>
         </Grid.Background>
 
