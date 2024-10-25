@@ -21,7 +21,9 @@
     <Resource Include="Assets\Centre.png" />
     <Resource Include="Assets\Pin.png" />
     <Resource Include="Assets\Rim.png" />
-    <Resource Include="Assets\Tick.wav" />
+    <Content Include="Assets\Tick.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

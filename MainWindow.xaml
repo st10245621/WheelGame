@@ -18,13 +18,24 @@
             <Image Source="Assets/Centre.png" Width="480" Height="476" Canvas.Left="10" Canvas.Top="12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
             <!-- Pin Image -->
-            <Image Source="Assets/Pin.png" Width="500" Height="511"
-                   RenderTransformOrigin="0.5,0" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Top="-3">
+            <Image Source="Assets/Pin.png" Width="500" Height="511" 
+                   RenderTransformOrigin="0.5,0" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Image.RenderTransform>
                     <RotateTransform Angle="0"/>
                 </Image.RenderTransform>
             </Image>
         </Canvas>
+
+        <!-- Prize Amount Selection -->
+        <ComboBox Name="PrizeAmountComboBox" Width="150" Height="30" 
+                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0"
+                  SelectionChanged="PrizeAmountComboBox_SelectionChanged">
+            <ComboBoxItem Content="100" />
+            <ComboBoxItem Content="200" />
+            <ComboBoxItem Content="300" />
+            <ComboBoxItem Content="400" />
+            <ComboBoxItem Content="500" />
+        </ComboBox>
 
         <!-- Spin Button -->
         <Button Name="SpinButton" Content="Spin" Width="100" Height="30"
