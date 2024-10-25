@@ -8,14 +8,17 @@ namespace WheelGame
 {
     public partial class MainWindow : Window
     {
-        private int selectedPrizeAmount = 0;  // Player's selected prize amount
+        private int selectedPrizePrediction = 0;  // Player's selected prize prediction
         private bool isSpinning = false;
 
-        // Prize amounts corresponding to each of the 20 segments
+        // Corrected prize amounts corresponding to the 20 segments
         private readonly int[] prizeAmounts = new int[]
         {
-            5, 10, 20, 50, 100, 200, 500, 1000, 5000, 10000,
-            20000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 250000
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5,      // 10 Green segments
+            50, 50, 50, 50,                   // 4 Blue segments
+            1000, 1000,                       // 2 Yellow segments
+            5000, 5000, 5000,                 // 3 Purple segments
+            100000                            // 1 Red segment (jackpot)
         };
 
         public MainWindow()
@@ -23,29 +26,27 @@ namespace WheelGame
             InitializeComponent();
         }
 
-        // Handle the prize amount selection
-        private void PrizeAmountComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        // Handle the player's prize prediction selection
+        private void PrizePredictionComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (PrizeAmountComboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem)
+            if (PrizePredictionComboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem &&
+                int.TryParse(selectedItem.Content?.ToString(), out int prediction))
             {
-                if (int.TryParse(selectedItem.Content?.ToString(), out int prizeAmount))
-                {
-                    selectedPrizeAmount = prizeAmount;
-                }
-                else
-                {
-                    selectedPrizeAmount = 0;
-                    MessageBox.Show("Invalid prize amount selected.");
-                }
+                selectedPrizePrediction = prediction;
+                SpinButton.IsEnabled = true;  // Enable the Spin button
+            }
+            else
+            {
+                selectedPrizePrediction = 0;
+                SpinButton.IsEnabled = false;  // Disable the Spin button
             }
         }
 
         // Spin button click handler
         private async void SpinButton_Click(object sender, RoutedEventArgs e)
         {
-            if (isSpinning) return;  // Prevent multiple clicks during spin
+            if (isSpinning) return;
             isSpinning = true;
-
             SpinButton.IsEnabled = false;
 
             var tickPlayer = new MediaPlayer();
@@ -61,45 +62,37 @@ namespace WheelGame
 
             tickPlayer.Open(new Uri(tickSoundPath, UriKind.Absolute));
 
-            // Check if the player has selected a prize amount
-            if (selectedPrizeAmount == 0)
-            {
-                MessageBox.Show("Please select a win amount before spinning.");
-                SpinButton.IsEnabled = true;
-                isSpinning = false;
-                return;
-            }
-
-            // Find the index of the selected prize amount
-            int prizeIndex = Array.IndexOf(prizeAmounts, selectedPrizeAmount);
-            if (prizeIndex == -1)
-            {
-                MessageBox.Show("Selected prize amount is invalid.");
-                SpinButton.IsEnabled = true;
-                isSpinning = false;
-                return;
-            }
-
-            // Calculate the stop angle based on the selected prize
-            double segmentSize = 18.0;  // 20 segments of 18 degrees each
-            double stopAngle = prizeIndex * segmentSize;
+            Random random = new Random();
+            double segmentSize = 18.0;  // 20 segments, each 18 degrees
+            int rawAngle = random.Next(0, 360);
+            double stopAngle = Math.Round(rawAngle / segmentSize) * segmentSize;
 
             await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
 
-            // Display the prize won
-            PrizeDisplay.Text = $"You won R{selectedPrizeAmount}!";
+            int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
+            int prizeAmount = prizeAmounts[prizeIndex];
+
+            int winnings = prizeAmount;
+            if (prizeAmount == selectedPrizePrediction)
+            {
+                winnings *= 2;  // Double the prize for correct prediction
+                PrizeDisplay.Text = $"Congratulations! You predicted correctly and won 2x R{prizeAmount} = R{winnings}!";
+            }
+            else
+            {
+                PrizeDisplay.Text = $"The wheel landed on R{prizeAmount}. You won R{winnings}!";
+            }
 
             SpinButton.IsEnabled = true;
             isSpinning = false;
         }
 
-        // Spins the wheel and synchronizes tick sounds with segment crossings
         private async Task SpinWheelWithTicks(double stopAngle, MediaPlayer tickPlayer)
         {
-            double fullRotations = 5;  // 5 full rotations
-            double totalRotation = 360 * fullRotations + stopAngle;  // Total rotation angle
-            double segmentSize = 18.0;  // 20 segments, each 18 degrees
-            int lastSegment = -1;  // Track the last ticked segment
+            double fullRotations = 5;
+            double totalRotation = 360 * fullRotations + stopAngle;
+            double segmentSize = 18.0;
+            int lastSegment = -1;
 
             DoubleAnimation spinAnimation = new DoubleAnimation
             {
@@ -109,18 +102,14 @@ namespace WheelGame
                 EasingFunction = new CircleEase { EasingMode = EasingMode.EaseOut }
             };
 
-            // Start the animation
             WheelRotation.BeginAnimation(RotateTransform.AngleProperty, spinAnimation);
 
-            // Subscribe to the CompositionTarget.Rendering event
             EventHandler renderingHandler = (s, e) =>
             {
-                // Get the current angle from the RotateTransform
-                double currentAngle = (WheelRotation.Angle % 360 + 360) % 360;  // Normalize angle between 0-360
+                double currentAngle = (WheelRotation.Angle % 360 + 360) % 360;
+                int currentSegment = (int)(currentAngle / segmentSize);
 
-                int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
-
-                if (currentSegment != lastSegment)  // Play tick if new segment is crossed
+                if (currentSegment != lastSegment)
                 {
                     tickPlayer.Stop();
                     tickPlayer.Play();
@@ -129,12 +118,15 @@ namespace WheelGame
             };
 
             CompositionTarget.Rendering += renderingHandler;
-
-            // Wait for the animation to complete
             await Task.Delay(spinAnimation.Duration.TimeSpan);
-
-            // Unsubscribe from the event
             CompositionTarget.Rendering -= renderingHandler;
+        }
+
+        private int DeterminePrizeIndexFromAngle(double finalAngle)
+        {
+            finalAngle = (finalAngle % 360 + 360) % 360;
+            int segmentIndex = (int)(finalAngle / 18.0) % 20;
+            return segmentIndex;
         }
     }
 }
