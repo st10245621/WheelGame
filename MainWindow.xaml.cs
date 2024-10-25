@@ -14,12 +14,11 @@ namespace WheelGame
         // Corrected prize amounts corresponding to the 20 segments
         private readonly int[] prizeAmounts = new int[]
         {
-            5, 5, 5, 5, 5, 5, 5, 5, 5, 5,      // 10 Green segments
-            50, 50, 50, 50,                   // 4 Blue segments
-            1000, 1000,                       // 2 Yellow segments
-            5000, 5000, 5000,                 // 3 Purple segments
-            100000                            // 1 Red segment (jackpot)
+        10000, 5, 5000, 5, 50, 5, 1000, 5,  // First 8 segments
+        50, 5, 5000, 5, 50, 5, 1000, 5,     // Next 8 segments
+        50, 5, 5000, 5                       // Last 4 segments before returning to red
         };
+
 
         public MainWindow()
         {
@@ -71,6 +70,9 @@ namespace WheelGame
 
             int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
             int prizeAmount = prizeAmounts[prizeIndex];
+
+            // Debugging: Show which segment and prize was selected
+            MessageBox.Show($"Segment Index: {prizeIndex}, Prize: R{prizeAmount}");
 
             int winnings = prizeAmount;
             if (prizeAmount == selectedPrizePrediction)
