@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic; // Added for using Dictionary
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -7,24 +7,63 @@ using System.Windows.Media.Animation;
 
 namespace WheelGame
 {
+    public enum Prize
+    {
+        RedR10000 = 10000,
+        GreenR5 = 5,
+        PurpleR1000 = 1000,
+        BlueR50 = 50,
+        YellowR5000 = 5000
+    }
+
+    public class GameController
+    {
+        private readonly Dictionary<int, Prize> segmentPrizes;
+        private int selectedPrizePrediction;
+
+        public GameController()
+        {
+            segmentPrizes = new Dictionary<int, Prize>
+            {
+                { 0, Prize.RedR10000 }, { 1, Prize.GreenR5 }, { 2, Prize.PurpleR1000 }, { 3, Prize.GreenR5 },
+                { 4, Prize.BlueR50 }, { 5, Prize.GreenR5 }, { 6, Prize.YellowR5000 }, { 7, Prize.GreenR5 },
+                { 8, Prize.BlueR50 }, { 9, Prize.GreenR5 }, { 10, Prize.PurpleR1000 }, { 11, Prize.GreenR5 },
+                { 12, Prize.BlueR50 }, { 13, Prize.GreenR5 }, { 14, Prize.YellowR5000 }, { 15, Prize.GreenR5 },
+                { 16, Prize.BlueR50 }, { 17, Prize.GreenR5 }, { 18, Prize.PurpleR1000 }, { 19, Prize.GreenR5 }
+            };
+        }
+
+        public void SetPrediction(int prediction)
+        {
+            selectedPrizePrediction = prediction;
+        }
+
+        public (int prizeAmount, bool isWin) SpinWheel(double stopAngle)
+        {
+            int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
+            int prizeAmount = (int)segmentPrizes[prizeIndex];
+            bool isWin = prizeAmount == selectedPrizePrediction;
+
+            return (prizeAmount, isWin);
+        }
+
+        private int DeterminePrizeIndexFromAngle(double finalAngle)
+        {
+            finalAngle = (finalAngle % 360 + 360) % 360;
+            return (int)(finalAngle / 18.0) % 20;
+        }
+    }
+
     public partial class MainWindow : Window
     {
         private int selectedPrizePrediction = 0;  // Player's selected prize prediction
         private bool isSpinning = false;
-
-        // Dictionary mapping segment indices to prize amounts
-        private readonly Dictionary<int, int> segmentPrizes = new Dictionary<int, int>
-        {
-            { 0, 10000 }, { 1, 5 }, { 2, 5000 }, { 3, 5 },
-            { 4, 50 }, { 5, 5 }, { 6, 1000 }, { 7, 5 },
-            { 8, 50 }, { 9, 5 }, { 10, 5000 }, { 11, 5 },
-            { 12, 50 }, { 13, 5 }, { 14, 1000 }, { 15, 5 },
-            { 16, 50 }, { 17, 5 }, { 18, 5000 }, { 19, 5 }
-        };
+        private GameController gameController;
 
         public MainWindow()
         {
             InitializeComponent();
+            gameController = new GameController();
         }
 
         // Handle the player's prize prediction selection
@@ -35,6 +74,7 @@ namespace WheelGame
             {
                 selectedPrizePrediction = prediction;
                 SpinButton.IsEnabled = true;  // Enable the Spin button
+                gameController.SetPrediction(prediction); // Set the prediction in the controller
             }
             else
             {
@@ -70,11 +110,11 @@ namespace WheelGame
 
             await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
 
-            int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
-            int prizeAmount = segmentPrizes[prizeIndex]; // Use the dictionary to get the prize amount
+            // Use the GameController to get the prize
+            (int prizeAmount, bool isWin) = gameController.SpinWheel(stopAngle);
 
             int winnings = prizeAmount;
-            if (prizeAmount == selectedPrizePrediction)
+            if (isWin)
             {
                 winnings *= 2;  // Double the prize for correct prediction
                 PrizeDisplay.Text = $"Congratulations! You predicted correctly and won 2x R{prizeAmount} = R{winnings}!";
@@ -121,13 +161,6 @@ namespace WheelGame
             CompositionTarget.Rendering += renderingHandler;
             await Task.Delay(spinAnimation.Duration.TimeSpan);
             CompositionTarget.Rendering -= renderingHandler;
-        }
-
-        private int DeterminePrizeIndexFromAngle(double finalAngle)
-        {
-            finalAngle = (finalAngle % 360 + 360) % 360;
-            int segmentIndex = (int)(finalAngle / 18.0) % 20;
-            return segmentIndex;
         }
     }
 }
