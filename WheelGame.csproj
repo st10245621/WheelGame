@@ -8,4 +8,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\Backing.png" />
+    <None Remove="Assets\Centre.png" />
+    <None Remove="Assets\Pin.png" />
+    <None Remove="Assets\Rim.png" />
+    <None Remove="Assets\Tick.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Backing.png" />
+    <Resource Include="Assets\Centre.png" />
+    <Resource Include="Assets\Pin.png" />
+    <Resource Include="Assets\Rim.png" />
+    <Resource Include="Assets\Tick.wav" />
+  </ItemGroup>
+
 </Project>
