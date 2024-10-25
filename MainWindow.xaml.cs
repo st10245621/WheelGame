@@ -8,29 +8,18 @@ namespace WheelGame
 {
     public partial class MainWindow : Window
     {
-        private int selectedPrizeAmount = 0;
         private bool isSpinning = false;
+
+        // Updated prize amounts corresponding to each of the 20 segments
+        private readonly int[] prizeAmounts = new int[]
+        {
+            5, 10, 20, 50, 100, 200, 500, 1000, 5000, 10000,
+            20000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 250000
+        };
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        // Handle the prize amount selection
-        private void PrizeAmountComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (PrizeAmountComboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem)
-            {
-                if (int.TryParse(selectedItem.Content?.ToString(), out int prizeAmount))
-                {
-                    selectedPrizeAmount = prizeAmount;
-                }
-                else
-                {
-                    selectedPrizeAmount = 0;
-                    MessageBox.Show("Invalid prize amount selected.");
-                }
-            }
         }
 
         // Spin button click handler
@@ -55,27 +44,32 @@ namespace WheelGame
             tickPlayer.Open(new Uri(tickSoundPath, UriKind.Absolute));
 
             Random random = new Random();
-            int rawAngle = random.Next(0, 360);  // Get a random stop angle between 0-360
+
+            // Randomly select a stop angle between 0-360 degrees
+            int rawAngle = random.Next(0, 360);
 
             // Adjust the angle to align with the nearest segment's center
-            int segmentSize = 30;  // 12 segments of 30 degrees each
-            int stopAngle = (int)(Math.Round(rawAngle / (double)segmentSize) * segmentSize);
+            double segmentSize = 18.0;  // 20 segments of 18 degrees each
+            double stopAngle = Math.Round(rawAngle / segmentSize) * segmentSize;
 
             await SpinWheelWithTicks(stopAngle, tickPlayer);  // Spin the wheel
 
             // Determine the prize based on the aligned stop angle.
-            string prize = DeterminePrizeFromAngle(stopAngle);
-            PrizeDisplay.Text = $"You won {selectedPrizeAmount} with {prize}!";
+            int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
+            int prizeAmount = prizeAmounts[prizeIndex];
+
+            PrizeDisplay.Text = $"You won R{prizeAmount}!";
 
             SpinButton.IsEnabled = true;
             isSpinning = false;
         }
 
         // Spins the wheel and synchronizes tick sounds with segment crossings
-        private async Task SpinWheelWithTicks(int stopAngle, MediaPlayer tickPlayer)
+        private async Task SpinWheelWithTicks(double stopAngle, MediaPlayer tickPlayer)
         {
-            int totalRotation = 360 * 5 + stopAngle;  // 5 full rotations + precise stop
-            int segmentSize = 30;  // 12 segments, each 30 degrees
+            double fullRotations = 5;  // 5 full rotations
+            double totalRotation = 360 * fullRotations + stopAngle;  // Total rotation angle
+            double segmentSize = 18.0;  // 20 segments, each 18 degrees
             double currentAngle = 0;
             int lastSegment = -1;  // Track the last ticked segment
 
@@ -89,14 +83,25 @@ namespace WheelGame
 
             spinAnimation.CurrentTimeInvalidated += (s, e) =>
             {
-                currentAngle = (WheelRotation.Angle % 360 + 360) % 360;  // Normalize angle
-                int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
+                var clock = (AnimationClock)s;
+                double? fromValue = spinAnimation.From;
+                double? toValue = spinAnimation.To;
+                double? progress = clock.CurrentProgress;
 
-                if (currentSegment != lastSegment)  // Play tick if new segment is crossed
+                if (fromValue.HasValue && toValue.HasValue && progress.HasValue)
                 {
-                    tickPlayer.Stop();
-                    tickPlayer.Play();
-                    lastSegment = currentSegment;
+                    // Calculate the current angle based on animation progress
+                    currentAngle = fromValue.Value + ((toValue.Value - fromValue.Value) * progress.Value);
+                    currentAngle = (currentAngle % 360 + 360) % 360;  // Normalize angle between 0-360
+
+                    int currentSegment = (int)(currentAngle / segmentSize);  // Calculate segment
+
+                    if (currentSegment != lastSegment)  // Play tick if new segment is crossed
+                    {
+                        tickPlayer.Stop();
+                        tickPlayer.Play();
+                        lastSegment = currentSegment;
+                    }
                 }
             };
 
@@ -104,32 +109,16 @@ namespace WheelGame
             await Task.Delay(spinAnimation.Duration.TimeSpan);
         }
 
-        // Determines the prize based on the final stop angle.
-        private string DeterminePrizeFromAngle(double finalAngle)
+        // Determines the prize index based on the final stop angle.
+        private int DeterminePrizeIndexFromAngle(double finalAngle)
         {
             // Normalize the angle to a value between 0 and 360 degrees.
             finalAngle = (finalAngle % 360 + 360) % 360;
 
-            // Each segment covers 30 degrees. Determine the segment index.
-            int segmentIndex = (int)(finalAngle / 30);
+            // Each segment covers 18 degrees. Determine the segment index.
+            int segmentIndex = (int)(finalAngle / 18.0) % 20;  // Ensure index is within range 0-19
 
-            // Map the segment index to the correct prize color.
-            return segmentIndex switch
-            {
-                0 => "Red",
-                1 => "Purple",
-                2 => "Green",
-                3 => "Blue",
-                4 => "Yellow",
-                5 => "Green",
-                6 => "Purple",
-                7 => "Blue",
-                8 => "Yellow",
-                9 => "Red",
-                10 => "Purple",
-                11 => "Green",
-                _ => "Unknown"
-            };
+            return segmentIndex;
         }
     }
 }
