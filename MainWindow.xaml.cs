@@ -113,8 +113,7 @@ namespace WheelGame
             WheelRotation.BeginAnimation(RotateTransform.AngleProperty, spinAnimation);
 
             // Subscribe to the CompositionTarget.Rendering event
-            EventHandler renderingHandler = null;
-            renderingHandler = (s, e) =>
+            EventHandler renderingHandler = (s, e) =>
             {
                 // Get the current angle from the RotateTransform
                 double currentAngle = (WheelRotation.Angle % 360 + 360) % 360;  // Normalize angle between 0-360
