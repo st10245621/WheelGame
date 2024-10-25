@@ -52,48 +52,44 @@
                     Margin="10">
             <ComboBox Name="PrizePredictionComboBox" Width="160" Height="40"
           SelectionChanged="PrizePredictionComboBox_SelectionChanged"
-          Margin="0,10,0,10">
+          Margin="0,10,0,10" FocusVisualStyle="{x:Null}">
                 <ComboBox.Template>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <Border x:Name="ComboBoxBorder" Background="LightGreen" 
-                        CornerRadius="20" BorderBrush="Black" BorderThickness="2">
-                                <DockPanel>
+                            <Border x:Name="ComboBoxBorder" Background="#90EE90" 
+                        CornerRadius="20" BorderBrush="Black" BorderThickness="2" Padding="5" 
+                        SnapsToDevicePixels="True">
+                                <Grid>
                                     <ContentPresenter x:Name="ContentSite"
                                           Margin="10,5,35,5"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Left" />
-                                </DockPanel>
+                                    <ToggleButton x:Name="ToggleButton" Width="160" Height="40"
+                                      Focusable="false" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                      FocusVisualStyle="{x:Null}">
+                                        <Path x:Name="Arrow" Width="12" Height="8" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                  Margin="0,0,15,0"
+                                  Data="M 0 0 L 12 0 L 6 6 Z" Fill="Black"/>
+                                    </ToggleButton>
+                                </Grid>
                             </Border>
                             <Popup x:Name="Popup"
                        Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
                        AllowsTransparency="True" Focusable="False"
                        PopupAnimation="Slide">
-                                <Border x:Name="PopupBorder" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                                <Border x:Name="PopupBorder" Background="White" BorderBrush="#666666" BorderThickness="1" CornerRadius="10" 
+                            Margin="0,5,0,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.5"/>
+                                    </Border.Effect>
                                     <ScrollViewer Margin="4,6,4,6">
                                         <ItemsPresenter/>
                                     </ScrollViewer>
                                 </Border>
                             </Popup>
-                            <Border x:Name="ToggleBorder" CornerRadius="15" BorderBrush="Black" BorderThickness="1" RenderTransformOrigin="0.286,0.427" Margin="1,1,1,2">
-                                <Border.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform AngleY="0.326"/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="0.14"/>
-                                    </TransformGroup>
-                                </Border.RenderTransform>
-                            </Border>
-                            <ToggleButton x:Name="ToggleButton"
-                                          Focusable="false" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                          Background="LightGreen" BorderBrush="Transparent" Margin="13,5,14,4">
-                                <Path x:Name="Arrow" Width="12" Height="8" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                      Data="M 0 0 L 12 0 L 6 6 Z" Fill="Black"/>
-                            </ToggleButton>
                         </Grid>
                         <ControlTemplate.Triggers>
-         
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="ComboBoxBorder" Property="Background" Value="#D3D3D3"/>
                                 <Setter TargetName="Arrow" Property="Fill" Value="Gray"/>
@@ -107,7 +103,6 @@
                 <ComboBoxItem Content="5000" />
                 <ComboBoxItem Content="100000" />
             </ComboBox>
-
             <Button Name="SpinButton" Width="157" Height="50"
         Content="SPIN" Click="SpinButton_Click" IsEnabled="False" Margin="0,10,0,10">
                 <Button.Template>
