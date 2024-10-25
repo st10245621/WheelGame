@@ -169,33 +169,42 @@ namespace WheelGame
             Random random = new Random();
             for (int i = 0; i < 50; i++)
             {
+                // Create a confetti piece (small ellipse)
                 Ellipse confetti = new Ellipse
                 {
-                    Width = random.Next(5, 10),
-                    Height = random.Next(5, 10),
+                    Width = random.Next(5, 10),  // Random width between 5-10
+                    Height = random.Next(5, 10),  // Random height between 5-10
                     Fill = new SolidColorBrush(Color.FromRgb(
                         (byte)random.Next(256),
                         (byte)random.Next(256),
-                        (byte)random.Next(256)))
+                        (byte)random.Next(256)))  // Random RGB color
                 };
 
+                // Random starting position at the top
                 double startX = random.Next(0, (int)ConfettiCanvas.ActualWidth);
                 Canvas.SetLeft(confetti, startX);
-                Canvas.SetTop(confetti, -10);
+                Canvas.SetTop(confetti, -10);  // Start just above the screen
 
+                // Add confetti to the canvas
                 ConfettiCanvas.Children.Add(confetti);
 
+                // Generate a random duration between 1.5 to 3.5 seconds for a slower fall
+                double durationInSeconds = random.Next(1500, 3500) / 1000.0;
+
+                // Create a slightly slower falling animation
                 DoubleAnimation fallAnimation = new DoubleAnimation
                 {
-                    From = -10,
-                    To = ConfettiCanvas.ActualHeight + 10,
-                    Duration = new Duration(TimeSpan.FromSeconds(random.Next(2, 5))),
-                    EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
+                    From = -10,  // Start above the canvas
+                    To = ConfettiCanvas.ActualHeight + 10,  // End below the canvas
+                    Duration = new Duration(TimeSpan.FromSeconds(durationInSeconds)),  // Slower fall
+                    EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }  // Smooth easing
                 };
 
+                // Attach the animation to the confetti piece
                 Storyboard.SetTarget(fallAnimation, confetti);
                 Storyboard.SetTargetProperty(fallAnimation, new PropertyPath("(Canvas.Top)"));
 
+                // Create and start the storyboard
                 Storyboard storyboard = new Storyboard();
                 storyboard.Children.Add(fallAnimation);
                 storyboard.Begin();
