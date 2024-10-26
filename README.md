@@ -3,7 +3,11 @@
 A **WPF-based wheel spinning game** that offers an engaging experience with animations, confetti, and sound effects. Players predict the outcome of a spin, and if they guess correctly, they win double the prize! The confetti animation makes winning even more exciting.
 
 ---
+## 🎥 Wheel Game Demo
 
+https://github.com/user-attachments/assets/a5f65734-452e-49ad-9162-7341797e0df8
+
+---
 ## 📂 Project Structure
 
 Here’s the structure of your **Wheel Game** project based on the provided setup:
