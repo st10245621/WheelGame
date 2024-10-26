@@ -113,7 +113,14 @@ namespace WheelGame
             (int prizeAmount, bool isWin) = gameController.SpinWheel(stopAngle);
 
             int winnings = prizeAmount;
-            if (isWin)
+
+            // Check if the prize is the Red Jackpot
+            if (prizeAmount == (int)Prize.RedR10000)
+            {
+                PrizeDisplay.Text = $"Jackpot! You won R{prizeAmount}!";
+                ShowConfetti();  // Trigger confetti for jackpot
+            }
+            else if (isWin)
             {
                 winnings *= 2;
                 PrizeDisplay.Text = $"Congratulations! You predicted correctly and won 2x R{prizeAmount} = R{winnings}!";
@@ -127,6 +134,7 @@ namespace WheelGame
             SpinButton.IsEnabled = true;
             isSpinning = false;
         }
+
 
         private async Task SpinWheelWithTicks(double stopAngle, MediaPlayer tickPlayer)
         {
