@@ -103,7 +103,6 @@
                             <!-- Outer Border for Styling -->
                             <Border x:Name="ComboBoxBorder" Background="LightGreen"
                         CornerRadius="20" BorderBrush="Black" BorderThickness="2" Padding="5">
-                                <!-- Corrected Grid Layout -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -120,15 +119,23 @@
                                           TextBlock.Foreground="Black"
                                           Grid.Column="0"/>
 
-                                    <!-- ToggleButton with Arrow on the Right -->
+                                    <!-- ToggleButton with Arrow and Label -->
                                     <ToggleButton x:Name="ToggleButton"
                                       IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                       Background="Transparent" BorderBrush="Transparent"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      FocusVisualStyle="{x:Null}" Grid.Column="1" Height="32" Width="139">
-                                        <Path x:Name="Arrow" Width="55" Height="13"
-                                  Data="M 0 0 L 12 0 L 6 6 Z"
-                                  Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
+                                      FocusVisualStyle="{x:Null}" Grid.Column="1"
+                                      Height="32" Width="140">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <!-- Arrow Icon -->
+                                            <Path x:Name="Arrow" Width="12" Height="8"
+                                      Data="M 0 0 L 12 0 L 6 6 Z"
+                                      Fill="Black" VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                                            <!-- Label Text -->
+                                            <TextBlock Text="Select Amount" FontSize="16" FontWeight="Bold"
+                                           Foreground="Black" VerticalAlignment="Center"/>
+                                        </StackPanel>
                                     </ToggleButton>
                                 </Grid>
                             </Border>
@@ -166,7 +173,6 @@
                 <ComboBoxItem Content="5000" />
                 <ComboBoxItem Content="10000" />
             </ComboBox>
-
 
 
 
