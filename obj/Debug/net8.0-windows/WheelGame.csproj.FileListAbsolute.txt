@@ -1,9 +1,3 @@
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.exe
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\Assets\Tick.wav
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.deps.json
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.runtimeconfig.json
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.dll
-C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.pdb
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\MainWindow.baml
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\MainWindow.g.cs
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\App.g.cs
@@ -15,6 +9,12 @@ C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.AssemblyInfoInputs.
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.AssemblyInfo.cs
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.csproj.CoreCompileInputs.cache
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.sourcelink.json
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.exe
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\Assets\Tick.wav
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.deps.json
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.runtimeconfig.json
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.dll
+C:\Users\Gerard\WheelGame\bin\Debug\net8.0-windows\WheelGame.pdb
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.dll
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\refint\WheelGame.dll
 C:\Users\Gerard\WheelGame\obj\Debug\net8.0-windows\WheelGame.pdb

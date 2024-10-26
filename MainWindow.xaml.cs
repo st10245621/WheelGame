@@ -28,6 +28,7 @@ namespace WheelGame
         private readonly Dictionary<int, Prize> segmentPrizes;
         private int selectedPrizePrediction;
 
+
         // Initializes the GameController and sets up the prize segments for the wheel.
         public GameController()
         {
@@ -75,6 +76,8 @@ namespace WheelGame
         private int selectedPrizePrediction = 0;
         private bool isSpinning = false;
         private GameController gameController;
+        private int spinCount = 0;  // Tracks the total number of spins
+
 
         public MainWindow()
         {
@@ -110,6 +113,9 @@ namespace WheelGame
             isSpinning = true;
             SpinButton.IsEnabled = false;
 
+            spinCount++;  // Increment spin count
+            SpinCountDisplay.Text = $"Spins: {spinCount}";  // Update UI with the new spin count
+
             var tickPlayer = new MediaPlayer();
             string tickSoundPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tick.wav");
 
@@ -131,20 +137,18 @@ namespace WheelGame
             await SpinWheelWithTicks(stopAngle, tickPlayer);
 
             (int prizeAmount, bool isWin) = gameController.SpinWheel(stopAngle);
-
             int winnings = prizeAmount;
 
-            
             if (prizeAmount == (int)Prize.RedR10000)
             {
                 PrizeDisplay.Text = $"Jackpot! You won R{prizeAmount}!";
-                ShowConfetti();  
+                ShowConfetti();
             }
             else if (isWin)
             {
                 winnings *= 2;
                 PrizeDisplay.Text = $"Congratulations! You predicted correctly and won 2x R{prizeAmount} = R{winnings}!";
-                ShowConfetti();  
+                ShowConfetti();
             }
             else
             {
@@ -154,6 +158,7 @@ namespace WheelGame
             SpinButton.IsEnabled = true;
             isSpinning = false;
         }
+
 
         // Animates the wheel spin with smooth deceleration, rotating for multiple full turns 
         // and stopping at a specified angle. A tick sound plays each time the wheel crosses into 
