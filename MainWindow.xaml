@@ -53,10 +53,10 @@
                     Margin="10">
 
             <!-- Prize Legend Header -->
-            <TextBlock Text="Prize Legend:" FontWeight="Bold" FontSize="20" Margin="0,10,0,5" />
+            <TextBlock Text="Prize Legend:" FontWeight="Bold" FontSize="20" Margin="0,10,0,5" Width="156" />
 
             <!-- Prize Legend Items with Colored Blocks -->
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" RenderTransformOrigin="0.717,0.46" Width="159">
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
                         <Rectangle Fill="Red" Width="20" Height="20"/>
@@ -94,16 +94,81 @@
             </StackPanel>
 
 
-            <!-- Existing ComboBox -->
-            <ComboBox Name="PrizePredictionComboBox" Width="160" Height="40"
-                      SelectionChanged="PrizePredictionComboBox_SelectionChanged"
-                      Margin="0,10,0,10" FocusVisualStyle="{x:Null}">
+            <ComboBox Name="PrizePredictionComboBox" Width="157" Height="50"
+          SelectionChanged="PrizePredictionComboBox_SelectionChanged"
+          Margin="0,10,0,10" FocusVisualStyle="{x:Null}">
+                <ComboBox.Template>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- Outer Border for Styling -->
+                            <Border x:Name="ComboBoxBorder" Background="LightGreen"
+                        CornerRadius="20" BorderBrush="Black" BorderThickness="2" Padding="5">
+                                <!-- Corrected Grid Layout -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Content Displayed When an Item is Selected -->
+                                    <ContentPresenter x:Name="ContentSite"
+                                          Margin="10,5,0,5"
+                                          VerticalAlignment="Center" HorizontalAlignment="Left"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          TextBlock.FontSize="24" TextBlock.FontWeight="Bold"
+                                          TextBlock.Foreground="Black"
+                                          Grid.Column="0"/>
+
+                                    <!-- ToggleButton with Arrow on the Right -->
+                                    <ToggleButton x:Name="ToggleButton"
+                                      IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Background="Transparent" BorderBrush="Transparent"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      FocusVisualStyle="{x:Null}" Grid.Column="1" Height="32" Width="139">
+                                        <Path x:Name="Arrow" Width="55" Height="13"
+                                  Data="M 0 0 L 12 0 L 6 6 Z"
+                                  Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+
+                            <!-- Popup to Show the Items -->
+                            <Popup Name="Popup"
+                       Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
+                       AllowsTransparency="True" Focusable="False"
+                       PopupAnimation="Slide">
+                                <Border x:Name="PopupBorder" Background="White"
+                            BorderBrush="Black" BorderThickness="1" CornerRadius="10" Padding="5">
+                                    <ScrollViewer Margin="4,6,4,6">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ComboBoxBorder" Property="Background" Value="#FF6347"/>
+                                <Setter TargetName="Arrow" Property="Fill" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ComboBoxBorder" Property="Background" Value="Gray"/>
+                                <Setter TargetName="Arrow" Property="Fill" Value="LightGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ComboBox.Template>
+
                 <ComboBoxItem Content="5" />
                 <ComboBoxItem Content="50" />
                 <ComboBoxItem Content="1000" />
                 <ComboBoxItem Content="5000" />
                 <ComboBoxItem Content="10000" />
             </ComboBox>
+
+
+
 
             <!-- Spin Button -->
             <Button Name="SpinButton" Width="157" Height="50"
