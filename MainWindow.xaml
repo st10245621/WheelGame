@@ -57,25 +57,12 @@
 
             <!-- Prize Legend Items with Colored Blocks -->
             <StackPanel Orientation="Vertical" RenderTransformOrigin="0.717,0.46" Width="159">
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
-                        <Rectangle Fill="Red" Width="20" Height="20"/>
-                    </Border>
-                    <TextBlock Text="R10,000" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
-                </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
                         <Rectangle Fill="LightGreen" Width="20" Height="20"/>
                     </Border>
                     <TextBlock Text="R5" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
-                        <Rectangle Fill="MediumPurple" Width="20" Height="20"/>
-                    </Border>
-                    <TextBlock Text="R1,000" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
@@ -87,11 +74,27 @@
 
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
+                        <Rectangle Fill="MediumPurple" Width="20" Height="20"/>
+                    </Border>
+                    <TextBlock Text="R1,000" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
                         <Rectangle Fill="PaleGoldenrod" Width="20" Height="20"/>
                     </Border>
                     <TextBlock Text="R5,000" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
                 </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <Border BorderBrush="Black" BorderThickness="1" Width="20" Height="20" Margin="0,0,5,0">
+                        <Rectangle Fill="Red" Width="20" Height="20"/>
+                    </Border>
+                    <TextBlock Text="R10,000" FontSize="18" Foreground="Black" VerticalAlignment="Center"/>
+                </StackPanel>
+
             </StackPanel>
+
 
 
             <ComboBox Name="PrizePredictionComboBox" Width="157" Height="50"
