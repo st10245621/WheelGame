@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WheelGame.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Wheel Game" Height="600" Width="800">
+        Title="Wheel Game" Height="690" Width="800">
     <Grid>
         <!-- Background Gradient -->
         <Grid.Background>
