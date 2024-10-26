@@ -77,7 +77,7 @@ namespace WheelGame
         private bool isSpinning = false;
         private GameController gameController;
         private int spinCount = 0;  // Tracks the total number of spins
-
+        private int totalWinnings = 0;  // Tracks the total winnings
 
         public MainWindow()
         {
@@ -114,7 +114,7 @@ namespace WheelGame
             SpinButton.IsEnabled = false;
 
             spinCount++;  // Increment spin count
-            SpinCountDisplay.Text = $"Spins: {spinCount}";  // Update UI with the new spin count
+            SpinCountDisplay.Text = $"Spins: {spinCount}";  // Update spin count display
 
             var tickPlayer = new MediaPlayer();
             string tickSoundPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tick.wav");
@@ -154,6 +154,9 @@ namespace WheelGame
             {
                 PrizeDisplay.Text = $"The wheel landed on R{prizeAmount}. You won R{winnings}!";
             }
+
+            totalWinnings += winnings;  // Accumulate winnings
+            TotalWinningsDisplay.Text = $"Total Winnings: R{totalWinnings}";  // Update UI with total winnings
 
             SpinButton.IsEnabled = true;
             isSpinning = false;
