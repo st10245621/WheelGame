@@ -27,6 +27,7 @@ namespace WheelGame
     {
         private readonly Dictionary<int, Prize> segmentPrizes;
         private int selectedPrizePrediction;
+        private static readonly Random random = new Random();
 
 
         // Initializes the GameController and sets up the prize segments for the wheel.
@@ -48,9 +49,18 @@ namespace WheelGame
             selectedPrizePrediction = prediction;
         }
 
+        // Generates a random stop angle for the wheel, aligned to the segment size.
+        public double GenerateRandomAngle()
+        {
+            double segmentSize = 18.0;  // 360 degrees / 20 segments = 18 degrees per segment
+            int rawAngle = random.Next(0, 360);  // Random angle between 0 and 359
+            return Math.Round(rawAngle / segmentSize) * segmentSize;  // Align to the nearest segment
+        }
+
+
         // Determines the prize amount and whether the user's prediction was correct
         // based on the final stop angle of the wheel.
-
+       
         public (int prizeAmount, bool isWin) SpinWheel(double stopAngle)
         {
             int prizeIndex = DeterminePrizeIndexFromAngle(stopAngle);
@@ -129,10 +139,8 @@ namespace WheelGame
 
             tickPlayer.Open(new Uri(tickSoundPath, UriKind.Absolute));
 
-            Random random = new Random();
-            double segmentSize = 18.0;
-            int rawAngle = random.Next(0, 360);
-            double stopAngle = Math.Round(rawAngle / segmentSize) * segmentSize;
+            // Use the GenerateRandomAngle method to get the stop angle.
+            double stopAngle = gameController.GenerateRandomAngle();
 
             await SpinWheelWithTicks(stopAngle, tickPlayer);
 
@@ -161,6 +169,7 @@ namespace WheelGame
             SpinButton.IsEnabled = true;
             isSpinning = false;
         }
+
 
 
         // Animates the wheel spin with smooth deceleration, rotating for multiple full turns 
