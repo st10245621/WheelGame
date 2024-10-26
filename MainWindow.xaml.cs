@@ -258,5 +258,30 @@ namespace WheelGame
                 storyboard.Begin();
             }
         }
+
+        // Handles the Reset button click event to reset the game state.
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Reset spin count and total winnings
+            spinCount = 0;
+            totalWinnings = 0;
+
+            // Update the UI to reflect the reset state
+            SpinCountDisplay.Text = "Spins: 0";
+            TotalWinningsDisplay.Text = "Total Winnings: R0";
+            PrizeDisplay.Text = "Make a prediction and spin the wheel!";
+
+            // Enable the spin button if a valid prediction is selected
+            if (selectedPrizePrediction != 0)
+            {
+                SpinButton.IsEnabled = true;
+            }
+
+            // Clear any confetti from the canvas
+            ConfettiCanvas.Children.Clear();
+
+            // Reset the wheel rotation to the starting position
+            WheelRotation.Angle = 0;
+        }
     }
 }
