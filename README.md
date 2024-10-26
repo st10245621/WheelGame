@@ -10,7 +10,7 @@ https://github.com/user-attachments/assets/a5f65734-452e-49ad-9162-7341797e0df8
 ---
 ## 📂 Project Structure
 
-Here’s the structure of your **Wheel Game** project based on the provided setup:
+Here’s the structure of the **Wheel Game** project based on the provided setup:
 
 ```
 WheelGame/
