@@ -5,7 +5,8 @@ A **WPF-based wheel spinning game** that offers an engaging experience with anim
 ---
 ## 🎥 Wheel Game Demo
 
-https://github.com/user-attachments/assets/a5f65734-452e-49ad-9162-7341797e0df8
+
+https://github.com/user-attachments/assets/14f942b5-9afc-4f35-9d8a-e9684fe836a0
 
 ---
 ## 📂 Project Structure
